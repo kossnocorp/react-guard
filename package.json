@@ -1,25 +1,30 @@
 {
   "name": "react-guard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Sasha Koss <kossnocorp@gmail.com>",
-  "description": "Date helpers",
-  "main": "src/react_guard.js",
+  "description": "React Guard automagically catches exceptions from React components, extracts useful debug information and prevents White Screen of Death",
+  "main": "index.js",
   "repository": "https://github.com/kossnocorp/react-guard",
   "engine": {
-    "node": ">= 0.11"
+    "node": ">= 6"
   },
   "dependencies": {},
   "devDependencies": {
-    "karma": "^0.12.28",
-    "karma-chai-sinon": "^0.1.3",
-    "karma-mocha": "^0.1.9",
-    "karma-phantomjs-launcher": "^0.1.4",
-    "karmak": "^0.2.1",
-    "webpack": "^1.4.4"
+    "ava": "^0.16.0",
+    "coveralls": "^2.11.15",
+    "nyc": "^9.0.1",
+    "react": "^15.4.0",
+    "react-dom": "^15.4.0",
+    "sinon": "^1.17.6",
+    "snazzy": "^5.0.0",
+    "standard": "^8.5.0"
   },
   "scripts": {
-    "karmak": "karmak --webpack-config ./config/webpack.js --karma-config ./config/karma.js",
-    "test": "npm run-script karmak -- --single-run",
-    "autotest": "npm run-script karmak"
+    "lint": "standard --verbose | snazzy",
+    "test": "nyc ava test/**/index.js --source '!tmp'",
+    "test-watch": "npm test -- --watch",
+    "test-coverage-report": "nyc report --reporter=html",
+    "test-coverage-coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "test-performance": "node test/react-15/performance.js"
   }
 }
