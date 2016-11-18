@@ -1,4 +1,4 @@
-# react-guard
+# React Guard
 
 ## Installation
 
