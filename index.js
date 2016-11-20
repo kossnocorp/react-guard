@@ -1,7 +1,10 @@
 /* eslint-disable no-redeclare */
 
-// XXX: This is highly optimized realization, see naive.js
-// for the logic reference.
+// XXX: This is highly optimized implementation, used in production
+// see naive.js for the logic reference.
+//
+// See V8 Bailout Reasons for optimization reference:
+// https://github.com/vhf/v8-bailout-reasons
 var reactGuard = function (React, guardFn) {
   guardFn = guardFn || function () { return null }
 
@@ -9,16 +12,20 @@ var reactGuard = function (React, guardFn) {
     try {
       return this.__guardedRender__()
     } catch (err) {
-      return guardFn(err, {props: this.props, state: this.state})
+      return guardFn(err, {
+        props: this.props,
+        state: this.state,
+        displayName: this.constructor.displayName
+      })
     }
   }
 
   function buildFunctionComponent (type) {
-    return function (props) {
+    return function (props, publicContext, updateQueue) {
       try {
-        return type(props)
+        return type(props, publicContext, updateQueue)
       } catch (err) {
-        return guardFn(err, {props: props})
+        return guardFn(err, {props: props, displayName: type.displayName})
       }
     }
   }
