@@ -1,8 +1,9 @@
 {
   "name": "react-guard",
-  "version": "0.2.0",
-  "author": "Sasha Koss <kossnocorp@gmail.com>",
+  "version": "0.3.0",
+  "author": "Sasha Koss <koss@nocorp.me>",
   "description": "React Guard automagically catches exceptions from React components, extracts useful debug information and prevents White Screen of Death",
+  "license": "MIT",
   "main": "index.js",
   "repository": "https://github.com/kossnocorp/react-guard",
   "engine": {
