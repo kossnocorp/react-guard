@@ -9,6 +9,8 @@ import ReactDOMServer from 'react-dom/server'
 
 test.always.afterEach(() => {
   reactGuard.restore(React)
+  // Restore spy
+  React.createElement.restore && React.createElement.restore()
 })
 
 ;[{title: 'reactGuard', reactGuardFn: reactGuard}, {title: 'Naive reactGuard', reactGuardFn: naiveReactGuard}].forEach(({title, reactGuardFn}) => {
@@ -122,6 +124,27 @@ test.always.afterEach(() => {
     const element = React.createElement(ComponentSpy)
     element.type({props: true}, {publicContext: true}, {updateQueue: true})
     t.true(ComponentSpy.calledWith({props: true}, {publicContext: true}, {updateQueue: true}))
+  })
+
+  test(`${title} › createElement called on function component saves guarded function`, t => {
+    const createElement = sinon.spy(React, 'createElement')
+    reactGuardFn(React)
+    const FunctionComponent = () => { return null }
+    React.createElement(FunctionComponent)
+    React.createElement(FunctionComponent)
+    t.is(createElement.args[0][0], createElement.args[1][0])
+  })
+
+  test(`${title} › createElement called on function saves all original properties`, t => {
+    const createElement = sinon.spy(React, 'createElement')
+    reactGuardFn(React)
+    const FunctionComponent = () => { return null }
+    FunctionComponent.displayName = 'FunctionComponent'
+    FunctionComponent.propTypes = {}
+    React.createElement(FunctionComponent)
+    const FunctionComponentWrapper = createElement.args[0][0]
+    t.is(FunctionComponentWrapper.displayName, 'FunctionComponent')
+    t.is(FunctionComponentWrapper.propTypes, FunctionComponent.propTypes)
   })
 })
 
