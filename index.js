@@ -21,13 +21,15 @@ var reactGuard = function (React, guardFn) {
   }
 
   function buildFunctionComponent (type) {
-    return function (props, publicContext, updateQueue) {
+    var _type = function (props, publicContext, updateQueue) {
       try {
         return type(props, publicContext, updateQueue)
       } catch (err) {
         return guardFn(err, {props: props, displayName: type.displayName})
       }
     }
+    Object.assign(_type, type)
+    return _type
   }
 
   React.__reactGuardOriginalCreateElement__ = React.createElement
@@ -50,7 +52,13 @@ var reactGuard = function (React, guardFn) {
       return React.__reactGuardOriginalCreateElement__.apply(React, args)
     // Function component
     } else if (typeof type === 'function' && !('render' in type.prototype)) {
-      var _type = buildFunctionComponent(type)
+      var _type
+      if (type.__reactGuardGuardedFunction__) {
+        _type = type.__reactGuardGuardedFunction__
+      } else {
+        _type = buildFunctionComponent(type)
+        type.__reactGuardGuardedFunction__ = _type
+      }
       var args = new Array(arguments.length)
       args[0] = _type
       for (var i = 1; i < args.length; ++i) { args[i] = arguments[i] }

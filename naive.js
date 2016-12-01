@@ -20,13 +20,21 @@ var naiveReactGuard = function (React, guardFn) {
       }
     } else if (typeof type === 'function' && !('render' in type.prototype)) {
       var guardedType = type
-      type = function (props, publicContext, updateQueue) {
-        try {
-          return guardedType(props, publicContext, updateQueue)
-        } catch (err) {
-          return guardFn(err, {props: props, displayName: guardedType.displayName})
+      var _type
+      if (guardedType.__reactGuardGuardedFunction__) {
+        _type = guardedType.__reactGuardGuardedFunction__
+      } else {
+        _type = function (props, publicContext, updateQueue) {
+          try {
+            return guardedType(props, publicContext, updateQueue)
+          } catch (err) {
+            return guardFn(err, {props: props, displayName: guardedType.displayName})
+          }
         }
+        Object.assign(_type, guardedType)
+        guardedType.__reactGuardGuardedFunction__ = _type
       }
+      type = _type
     }
     return React.__reactGuardOriginalCreateElement__.apply(React, [type].concat(Array.prototype.slice.call(arguments, 1)))
   }
