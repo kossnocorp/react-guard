@@ -14,7 +14,7 @@ var naiveReactGuard = function (React, guardFn) {
           return guardFn(err, {
             props: this.props,
             state: this.state,
-            displayName: this.constructor.displayName
+            displayName: this.constructor.displayName || this.constructor.name
           })
         }
       }
