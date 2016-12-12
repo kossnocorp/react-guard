@@ -28,6 +28,20 @@ test.always.afterEach(() => {
     t.true(guardSpy.calledWith({error: 'test'}, {props: {a: 'A', children: 'children'}, state: {b: 'B'}, displayName: 'CreateClassComponent'}))
   })
 
+  test(`${title} › a component created using React.createClass with empty displayName`, t => {
+    const guardSpy = sinon.spy(() => React.createElement('div', {}, 'w', '0', '0', 't'))
+    reactGuardFn(React, guardSpy)
+    const CreateClassComponent = React.createClass({
+      getInitialState () { return {b: 'B'} },
+      render () { throw {error: 'test'} }
+    })
+    CreateClassComponent.displayName = ''
+    const result = ReactDOMServer.renderToStaticMarkup(React.createElement(CreateClassComponent, {a: 'A'}, 'children'))
+    t.is(result, '<div>w00t</div>')
+    t.true(guardSpy.called)
+    t.true(guardSpy.calledWith({error: 'test'}, {props: {a: 'A', children: 'children'}, state: {b: 'B'}, displayName: ''}))
+  })
+
   test(`${title} › a warm component created using React.createClass`, t => {
     reactGuardFn(React)
     const CreateClassComponent = React.createClass({
@@ -50,7 +64,24 @@ test.always.afterEach(() => {
       }
       render () { throw {error: 'test'} }
     }
-    ClassComponent.displayName = 'ClassComponent'
+    ClassComponent.displayName = 'CustomDisplayName'
+    const result = ReactDOMServer.renderToStaticMarkup(React.createElement(ClassComponent, {a: 'A'}, 'children'))
+    t.is(result, '<div>w00t</div>')
+    t.true(guardSpy.called)
+    t.true(guardSpy.calledWith({error: 'test'}, {props: {a: 'A', children: 'children'}, state: {b: 'B'}, displayName: 'CustomDisplayName'}))
+  })
+
+  test(`${title} › a component inherited from React.Component with empty displayName`, t => {
+    const guardSpy = sinon.spy(() => React.createElement('div', {}, 'w', '0', '0', 't'))
+    reactGuardFn(React, guardSpy)
+    class ClassComponent extends React.Component {
+      constructor (props) {
+        super(props)
+        this.state = {b: 'B'}
+      }
+      render () { throw {error: 'test'} }
+    }
+    ClassComponent.displayName = ''
     const result = ReactDOMServer.renderToStaticMarkup(React.createElement(ClassComponent, {a: 'A'}, 'children'))
     t.is(result, '<div>w00t</div>')
     t.true(guardSpy.called)
@@ -75,7 +106,20 @@ test.always.afterEach(() => {
     class PureClassComponent extends React.PureComponent {
       render () { throw {error: 'test'} }
     }
-    PureClassComponent.displayName = 'PureClassComponent'
+    PureClassComponent.displayName = 'CustomDisplayName'
+    const result = ReactDOMServer.renderToStaticMarkup(React.createElement(PureClassComponent, {a: 'A'}, 'children'))
+    t.is(result, '<div>w00t</div>')
+    t.true(guardSpy.called)
+    t.true(guardSpy.calledWith({error: 'test'}, {props: {a: 'A', children: 'children'}, state: null, displayName: 'CustomDisplayName'}))
+  })
+
+  test(`${title} › a component inherited from React.PureComponent`, t => {
+    const guardSpy = sinon.spy(() => React.createElement('div', {}, 'w', '0', '0', 't'))
+    reactGuardFn(React, guardSpy)
+    class PureClassComponent extends React.PureComponent {
+      render () { throw {error: 'test'} }
+    }
+    PureClassComponent.displayName = ''
     const result = ReactDOMServer.renderToStaticMarkup(React.createElement(PureClassComponent, {a: 'A'}, 'children'))
     t.is(result, '<div>w00t</div>')
     t.true(guardSpy.called)
@@ -101,6 +145,17 @@ test.always.afterEach(() => {
     t.is(result, '<div>w00t</div>')
     t.true(guardSpy.called)
     t.true(guardSpy.calledWith({error: 'test'}, {props: {a: 'A', children: 'children'}, displayName: 'FunctionComponent'}))
+  })
+
+  test(`${title} › a function component with empty displayName`, t => {
+    const guardSpy = sinon.spy(() => React.createElement('div', {}, 'w', '0', '0', 't'))
+    reactGuardFn(React, guardSpy)
+    const FunctionComponent = () => { throw {error: 'test'} }
+    FunctionComponent.displayName = ''
+    const result = ReactDOMServer.renderToStaticMarkup(React.createElement(FunctionComponent, {a: 'A'}, 'children'))
+    t.is(result, '<div>w00t</div>')
+    t.true(guardSpy.called)
+    t.true(guardSpy.calledWith({error: 'test'}, {props: {a: 'A', children: 'children'}, displayName: ''}))
   })
 
   test(`${title} › a warm function component`, t => {
