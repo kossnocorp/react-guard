@@ -10,6 +10,13 @@ This change log follows the format documented in [Keep a CHANGELOG].
 
 ## Unreleased
 
+## 0.4.0
+
+### Added
+
+- Fallback to `constructor.name` when `constructor.displayName`
+  isn't present.
+
 ## 0.3.1 - 2016-12-01
 
 ### Fixed
