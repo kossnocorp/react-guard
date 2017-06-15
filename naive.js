@@ -5,7 +5,7 @@ var naiveReactGuard = function (React, guardFn) {
 
   React.__reactGuardOriginalCreateElement__ = React.createElement
   React.createElement = function (type) {
-    if (typeof type === 'function' && 'render' in type.prototype && !('__guardedRender__' in type.prototype)) {
+    if (typeof type === 'function' && type.prototype && 'render' in type.prototype && !('__guardedRender__' in type.prototype)) {
       type.prototype.__guardedRender__ = type.prototype.render
       type.prototype.render = function () {
         try {
@@ -18,7 +18,7 @@ var naiveReactGuard = function (React, guardFn) {
           })
         }
       }
-    } else if (typeof type === 'function' && !('render' in type.prototype)) {
+    } else if (typeof type === 'function' && (!type.prototype || !('render' in type.prototype))) {
       var guardedType = type
       var _type
       if (guardedType.__reactGuardGuardedFunction__) {

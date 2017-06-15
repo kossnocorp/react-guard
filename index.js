@@ -44,14 +44,14 @@ var reactGuard = function (React, guardFn) {
         return React.__reactGuardOriginalCreateElement__.apply(React, args)
       }
     // Class component
-    } else if (typeof type === 'function' && 'render' in type.prototype && !('__guardedRender__' in type.prototype)) {
+    } else if (typeof type === 'function' && type.prototype && 'render' in type.prototype && !('__guardedRender__' in type.prototype)) {
       type.prototype.__guardedRender__ = type.prototype.render
       type.prototype.render = classComponentRender
       var args = new Array(arguments.length)
       for (var i = 0; i < args.length; ++i) { args[i] = arguments[i] }
       return React.__reactGuardOriginalCreateElement__.apply(React, args)
     // Function component
-    } else if (typeof type === 'function' && !('render' in type.prototype)) {
+    } else if (typeof type === 'function' && (!type.prototype || !('render' in type.prototype))) {
       var _type
       if (type.__reactGuardGuardedFunction__) {
         _type = type.__reactGuardGuardedFunction__
