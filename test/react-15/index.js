@@ -72,7 +72,7 @@ test.always.afterEach(() => {
         {
           props: { a: 'A', children: 'children' },
           state: { b: 'B' },
-          displayName: ''
+          displayName: 'Constructor'
         }
       )
     )
