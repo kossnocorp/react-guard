@@ -3,11 +3,9 @@ language: node_js
 node_js:
   - 8
 
-before_script:
-  - cd test/react-15 && yarn
-  - cd test/react-16 && yarn
-
 script:
+  - cd test/react-15 && yarn && cd -
+  - cd test/react-16 && yarn && cd -
   - yarn lint
   - yarn test
 
