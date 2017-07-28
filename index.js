@@ -55,6 +55,7 @@ var reactGuard = function (React, guardFn) {
       // Class component
     } else if (
       typeof type === 'function' &&
+      type.prototype &&
       'render' in type.prototype &&
       !('__guardedRender__' in type.prototype)
     ) {
@@ -66,7 +67,10 @@ var reactGuard = function (React, guardFn) {
       }
       return React.__reactGuardOriginalCreateElement__.apply(React, args)
       // Function component
-    } else if (typeof type === 'function' && !('render' in type.prototype)) {
+    } else if (
+      typeof type === 'function' &&
+      (!type.prototype || !('render' in type.prototype))
+    ) {
       var _type
       if (type.__reactGuardGuardedFunction__) {
         _type = type.__reactGuardGuardedFunction__
