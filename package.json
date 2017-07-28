@@ -11,14 +11,12 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "ava": "^0.16.0",
-    "coveralls": "^2.11.15",
-    "nyc": "^9.0.1",
-    "react": "^15.4.0",
-    "react-dom": "^15.4.0",
-    "sinon": "^1.17.6",
-    "snazzy": "^5.0.0",
-    "standard": "^8.5.0"
+    "ava": "^0.21.0",
+    "coveralls": "^2.13.1",
+    "nyc": "^11.0.3",
+    "sinon": "^2.4.1",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.2"
   },
   "scripts": {
     "lint": "standard --verbose | snazzy",
