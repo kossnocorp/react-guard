@@ -265,6 +265,34 @@ test.always.afterEach(() => {
     )
   })
 
+  test(`${title} › an arrow function component`, t => {
+    const guardSpy = sinon.spy(() =>
+      React.createElement('div', {}, 'w', '0', '0', 't')
+    )
+    reactGuardFn(React, guardSpy)
+    const FunctionComponent = () => {
+      throw { error: 'test' }
+    }
+    // Arrow functions don't have the prototype. But because of AVA transpiling
+    // the source code, there is no way to test it against real arrow functions.
+    FunctionComponent.prototype = undefined
+    FunctionComponent.displayName = 'FunctionComponent'
+    const result = ReactDOMServer.renderToStaticMarkup(
+      React.createElement(FunctionComponent, { a: 'A' }, 'children')
+    )
+    t.is(result, '<div>w00t</div>')
+    t.true(guardSpy.called)
+    t.true(
+      guardSpy.calledWith(
+        { error: 'test' },
+        {
+          props: { a: 'A', children: 'children' },
+          displayName: 'FunctionComponent'
+        }
+      )
+    )
+  })
+
   test(`${title} › a function component with empty displayName`, t => {
     const guardSpy = sinon.spy(() =>
       React.createElement('div', {}, 'w', '0', '0', 't')
