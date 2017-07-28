@@ -10,7 +10,14 @@ This change log follows the format documented in [Keep a CHANGELOG].
 
 ## Unreleased
 
-## 0.4.0
+## 0.5.0 - 2017-07-28
+
+### Fixed
+
+- Fix exception cause by native (not transpiled) arrow functions.
+  Kudos to [@lixiaoyan](https://github.com/lixiaoyan).
+
+## 0.4.0 - 2016-12-12
 
 ### Added
 
