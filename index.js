@@ -6,7 +6,11 @@
 // See V8 Bailout Reasons for optimization reference:
 // https://github.com/vhf/v8-bailout-reasons
 var reactGuard = function (React, guardFn) {
-  guardFn = guardFn || function () { return null }
+  guardFn =
+    guardFn ||
+    function () {
+      return null
+    }
 
   function classComponentRender () {
     try {
@@ -25,7 +29,7 @@ var reactGuard = function (React, guardFn) {
       try {
         return type(props, publicContext, updateQueue)
       } catch (err) {
-        return guardFn(err, {props: props, displayName: type.displayName})
+        return guardFn(err, { props: props, displayName: type.displayName })
       }
     }
     Object.assign(_type, type)
@@ -37,20 +41,31 @@ var reactGuard = function (React, guardFn) {
     // DOM component
     if (typeof type === 'string') {
       if (arguments.length === 2) {
-        return React.__reactGuardOriginalCreateElement__(type, createElementProps)
+        return React.__reactGuardOriginalCreateElement__(
+          type,
+          createElementProps
+        )
       } else {
         var args = new Array(arguments.length)
-        for (var i = 0; i < args.length; ++i) { args[i] = arguments[i] }
+        for (var i = 0; i < args.length; ++i) {
+          args[i] = arguments[i]
+        }
         return React.__reactGuardOriginalCreateElement__.apply(React, args)
       }
-    // Class component
-    } else if (typeof type === 'function' && 'render' in type.prototype && !('__guardedRender__' in type.prototype)) {
+      // Class component
+    } else if (
+      typeof type === 'function' &&
+      'render' in type.prototype &&
+      !('__guardedRender__' in type.prototype)
+    ) {
       type.prototype.__guardedRender__ = type.prototype.render
       type.prototype.render = classComponentRender
       var args = new Array(arguments.length)
-      for (var i = 0; i < args.length; ++i) { args[i] = arguments[i] }
+      for (var i = 0; i < args.length; ++i) {
+        args[i] = arguments[i]
+      }
       return React.__reactGuardOriginalCreateElement__.apply(React, args)
-    // Function component
+      // Function component
     } else if (typeof type === 'function' && !('render' in type.prototype)) {
       var _type
       if (type.__reactGuardGuardedFunction__) {
@@ -61,15 +76,22 @@ var reactGuard = function (React, guardFn) {
       }
       var args = new Array(arguments.length)
       args[0] = _type
-      for (var i = 1; i < args.length; ++i) { args[i] = arguments[i] }
+      for (var i = 1; i < args.length; ++i) {
+        args[i] = arguments[i]
+      }
       return React.__reactGuardOriginalCreateElement__.apply(React, args)
-    // "Warm" class component
+      // "Warm" class component
     } else {
       if (arguments.length === 2) {
-        return React.__reactGuardOriginalCreateElement__(type, createElementProps)
+        return React.__reactGuardOriginalCreateElement__(
+          type,
+          createElementProps
+        )
       } else {
         var args = new Array(arguments.length)
-        for (var i = 0; i < args.length; ++i) { args[i] = arguments[i] }
+        for (var i = 0; i < args.length; ++i) {
+          args[i] = arguments[i]
+        }
         return React.__reactGuardOriginalCreateElement__.apply(React, args)
       }
     }

@@ -1,11 +1,19 @@
 // XXX: This is a naive implementation, see index.js
 // for optimized, production verion.
 var naiveReactGuard = function (React, guardFn) {
-  guardFn = guardFn || function () { return null }
+  guardFn =
+    guardFn ||
+    function () {
+      return null
+    }
 
   React.__reactGuardOriginalCreateElement__ = React.createElement
   React.createElement = function (type) {
-    if (typeof type === 'function' && 'render' in type.prototype && !('__guardedRender__' in type.prototype)) {
+    if (
+      typeof type === 'function' &&
+      'render' in type.prototype &&
+      !('__guardedRender__' in type.prototype)
+    ) {
       type.prototype.__guardedRender__ = type.prototype.render
       type.prototype.render = function () {
         try {
@@ -28,7 +36,10 @@ var naiveReactGuard = function (React, guardFn) {
           try {
             return guardedType(props, publicContext, updateQueue)
           } catch (err) {
-            return guardFn(err, {props: props, displayName: guardedType.displayName})
+            return guardFn(err, {
+              props: props,
+              displayName: guardedType.displayName
+            })
           }
         }
         Object.assign(_type, guardedType)
@@ -36,7 +47,10 @@ var naiveReactGuard = function (React, guardFn) {
       }
       type = _type
     }
-    return React.__reactGuardOriginalCreateElement__.apply(React, [type].concat(Array.prototype.slice.call(arguments, 1)))
+    return React.__reactGuardOriginalCreateElement__.apply(
+      React,
+      [type].concat(Array.prototype.slice.call(arguments, 1))
+    )
   }
 }
 
