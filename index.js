@@ -29,10 +29,10 @@ var reactGuard = function (React, guardFn) {
       try {
         return type(props, publicContext, updateQueue)
       } catch (err) {
-        return guardFn(err, { props: props, displayName: type.displayName })
+        return guardFn(err, { props: props, displayName: type.displayName || type.name })
       }
     }
-    Object.assign(_type, type)
+    Object.assign(_type, type, { displayName: type.displayName || type.name })
     return _type
   }
 
