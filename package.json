@@ -5,6 +5,13 @@
   "description": "React Guard automagically catches exceptions from React components, extracts useful debug information and prevents White Screen of Death",
   "license": "MIT",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "naive.js",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE.md"
+  ],
   "repository": "https://github.com/kossnocorp/react-guard",
   "engine": {
     "node": ">= 6"
